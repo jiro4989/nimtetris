@@ -171,7 +171,8 @@ proc updateCurrentBoard(m: Mino) {.exportc.} =
   displayBoard = currentBoard
 
 proc newRandomMino(): Mino {.exportc.} =
-  let r = random(max = minos.len)
+  let r = 0
+  #let r = random(max = minos.len)
   return Mino(minoIndex: r, x: 4, y: 0)
 
 proc show(b: Board) =
@@ -180,6 +181,3 @@ proc show(b: Board) =
   for row in b:
     echo row.join
   echo "------------------------------------"
-
-when isMainModule:
-  randomize()

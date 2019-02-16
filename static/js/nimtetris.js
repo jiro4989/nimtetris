@@ -12,8 +12,6 @@ if (typeof Uint16Array === 'undefined') Uint16Array = Array;
 if (typeof Uint32Array === 'undefined') Uint32Array = Array;
 if (typeof Float32Array === 'undefined') Float32Array = Array;
 if (typeof Float64Array === 'undefined') Float64Array = Array;
-var NTI26415 = {size: 0,kind: 43,base: null,node: null,finalizer: null};
-var NTI26602 = {size: 0, kind: 18, base: null, node: null, finalizer: null};
 var NTI149084 = {size: 0,kind: 24,base: null,node: null,finalizer: null};
 var NTI3850 = {size: 0, kind: 17, base: null, node: null, finalizer: null};
 var NTI148310 = {size: 0,kind: 31,base: null,node: null,finalizer: null};
@@ -98,9 +96,6 @@ var NNI3850 = {kind: 2, len: 0, offset: 0, typ: null, name: null, sons: []};
 NTI3850.node = NNI3850;
 NTI3850.base = NTI3828;
 NTI149084.base = NTI104;
-var NNI26602 = {kind: 2, len: 2, offset: 0, typ: null, name: null, sons: [{kind: 1, offset: "a0", len: 0, typ: NTI26415, name: "a0", sons: null}, 
-{kind: 1, offset: "a1", len: 0, typ: NTI26415, name: "a1", sons: null}]};
-NTI26602.node = NNI26602;
 
 function makeNimstrLit(c_16225) {
 		  var ln = c_16225.length;
@@ -1219,69 +1214,6 @@ function updateCurrentBoard(m_149535) {
 	
 }
 
-function rotl_26815(x_26817, k_26818) {
-	var result_26819 = 0;
-
-	var F={procname:"random.rotl",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/random.nim",line:0};
-	framePtr = F;
-		F.line = 46;
-		result_26819 = ((x_26817 << k_26818) | ((x_26817 >>> 0) >>> ((64 - k_26818) >>> 0)));
-	framePtr = F.prev;
-
-	return result_26819;
-
-}
-
-function next_26868(r_26871) {
-	var result_26872 = 0;
-
-	var F={procname:"random.next",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/random.nim",line:0};
-	framePtr = F;
-		F.line = 50;
-		var s0_26873 = r_26871.a0;
-		F.line = 51;
-		var s1_26874 = r_26871.a1;
-		F.line = 52;
-		result_26872 = ((s0_26873 + s1_26874) >>> 0);
-		F.line = 53;
-		s1_26874 = (s1_26874 ^ s0_26873);
-		F.line = 54;
-		r_26871.a0 = ((rotl_26815(s0_26873, 55) ^ s1_26874) ^ (s1_26874 << 14));
-		F.line = 55;
-		r_26871.a1 = rotl_26815(s1_26874, 36);
-	framePtr = F.prev;
-
-	return result_26872;
-
-}
-
-function random_27130(max_27132) {
-	var result_27133 = 0;
-
-	var F={procname:"random.random",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/random.nim",line:0};
-	framePtr = F;
-	BeforeRet: do {
-		L1: do {
-			F.line = 83;
-				L2: while (true) {
-				if (!true) break L2;
-					F.line = 84;
-					var x_27135 = next_26868(state_26605[0]);
-					if ((x_27135 < ((4294967295 - (4294967295 % chckRange(max_27132, 0, 4294967295))) >>> 0))) {
-					F.line = 86;
-					result_27133 = (((x_27135 % max_27132))|0);
-					break BeforeRet;
-					}
-					
-				}
-		} while(false);
-	} while (false);
-	framePtr = F.prev;
-
-	return result_27133;
-
-}
-
 function newRandomMino() {
 	var result_149552 = null;
 
@@ -1289,9 +1221,9 @@ function newRandomMino() {
 	framePtr = F;
 	BeforeRet: do {
 		F.line = 174;
-		var r_149560 = random_27130(2);
-		F.line = 175;
-		result_149552 = {minoIndex: r_149560, x: 4, y: 0, rotateIndex: 0};
+		var r_149554 = 0;
+		F.line = 176;
+		result_149552 = {minoIndex: r_149554, x: 4, y: 0, rotateIndex: 0};
 		break BeforeRet;
 	} while (false);
 	framePtr = F.prev;
@@ -1299,91 +1231,3 @@ function newRandomMino() {
 	return result_149552;
 
 }
-
-function init_rand_27491(seed_27493) {
-	var result_27494 = [{a0: 0, a1: 0}];
-
-	var F={procname:"random.initRand",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/random.nim",line:0};
-	framePtr = F;
-		F.line = 169;
-		result_27494[0].a0 = chckRange(((seed_27493 ) >>> 16), 0, 4294967295);
-		F.line = 170;
-		result_27494[0].a1 = chckRange((seed_27493 & 65535), 0, 4294967295);
-		F.line = 171;
-		next_26868(result_27494[0]);
-	framePtr = F.prev;
-
-	return result_27494[0];
-
-}
-
-function randomize_27520(seed_27522) {
-	var F={procname:"random.randomize",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/random.nim",line:0};
-	framePtr = F;
-		F.line = 176;
-		nimCopy(state_26605[0], init_rand_27491(seed_27522), NTI26602);
-	framePtr = F.prev;
-
-	
-}
-
-function convert_133126(unit_from_133130, unit_to_133132, quantity_133134) {
-		var Tmp1;
-
-	var result_133135 = 0;
-
-	var F={procname:"convert.convert",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/times.nim",line:0};
-	framePtr = F;
-		F.line = 326;
-		if ((unit_from_133130 < unit_to_133132)) {
-		Tmp1 = divInt(quantity_133134, divInt(unit_weights_133017[chckIndx(unit_to_133132, 0, unit_weights_133017.length+0-1)-0], unit_weights_133017[chckIndx(unit_from_133130, 0, unit_weights_133017.length+0-1)-0]));
-		}
-		else {
-		Tmp1 = HEX2A_132401(divInt(unit_weights_133017[chckIndx(unit_from_133130, 0, unit_weights_133017.length+0-1)-0], unit_weights_133017[chckIndx(unit_to_133132, 0, unit_weights_133017.length+0-1)-0]), quantity_133134);
-		}
-		
-		result_133135 = Tmp1;
-	framePtr = F.prev;
-
-	return result_133135;
-
-}
-
-function to_unix_133429(t_133431) {
-	var result_133432 = 0;
-
-	var F={procname:"times.toUnix",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/times.nim",line:0};
-	framePtr = F;
-		F.line = 423;
-		result_133432 = t_133431.seconds;
-	framePtr = F.prev;
-
-	return result_133432;
-
-}
-
-function nanosecond_133104(time_133106) {
-	var result_133107 = 0;
-
-	var F={procname:"times.nanosecond",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/times.nim",line:0};
-	framePtr = F;
-		F.line = 359;
-		result_133107 = time_133106.nanosecond;
-	framePtr = F.prev;
-
-	return result_133107;
-
-}
-
-function randomize_147001() {
-	var F={procname:"random.randomize",prev:framePtr,filename:"../../../../../.choosenim/toolchains/nim-0.19.0/lib/pure/random.nim",line:0};
-	framePtr = F;
-		F.line = 194;
-		var now_147003 = get_time_135961();
-		F.line = 195;
-		randomize_27520(addInt(convert_133126(3, 0, to_unix_133429(now_147003)), nanosecond_133104(now_147003)));
-	framePtr = F.prev;
-
-	
-}
-randomize_147001();

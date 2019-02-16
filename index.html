@@ -7,7 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="static/js/nimtetris.js"></script>
     <script>
-        window.onload = function () {
+        function clearTable() {
+            let body = document.getElementById("tetrisBody");
+            while (body.firstChild) {
+                body.removeChild(body.firstChild);
+            }
+        }
+
+        function updateTable() {
             let body = document.getElementById("tetrisBody");
             for (let i = 0; i < displayBoard.length; i++) {
                 let tr = body.insertRow(-1);
@@ -19,6 +26,15 @@
                     tr.appendChild(td);
                 }
             }
+        }
+
+        window.onload = function () {
+            // updateTable();
+            let mino = newRandomMino();
+            console.log(mino);
+            console.log(getBlock(mino));
+            updateDisplayBoard(mino);
+            updateTable();
         }
     </script>
     <title>NimTetris</title>
