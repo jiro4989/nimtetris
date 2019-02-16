@@ -142,3 +142,18 @@ suite "canMoveDown":
     check(Mino(minoIndex: 0, x: 0, y: 1).canMoveDown(board2) == false)
   test "移動不可。配列範囲外":
     check(Mino(minoIndex: 0, x: 0, y: 2).canMoveDown(board2) == false)
+
+suite "rotateRight":
+  discard
+
+suite "rotateLeft":
+  discard
+
+suite "isDeletable":
+  discard
+
+suite "fetchRow":
+  discard
+
+suite "setMino":
+  discard
