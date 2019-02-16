@@ -148,7 +148,7 @@ proc isDeletable(row: seq[int]): bool =
 
 proc fetchRow(mb: MinoBoard, n: int): seq[int] =
   let row = mb.board[n]
-  return row[mb.offset ..^ row.len - mb.offset]
+  return row[mb.offset .. row.len - 1 - mb.offset]
 
 proc setMino(b: var Board, m: Mino) =
   let blk = m.getBlock
