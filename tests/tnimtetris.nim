@@ -150,7 +150,14 @@ suite "rotateLeft":
   discard
 
 suite "isDeletable":
-  discard
+  test "削除可能。すべて1":
+    check @[1, 1, 1, 1].isDeletable == true
+  test "削除可能。すべて0でない":
+    check @[1, 2, 3, 4].isDeletable == true
+  test "削除不可。1つは0が存在する":
+    check @[1, 1, 0, 1].isDeletable == false
+  test "削除不可。すべて0":
+    check @[0, 0, 0, 0].isDeletable == false
 
 suite "fetchRow":
   discard
