@@ -111,6 +111,8 @@ proc canMoveRight(m: Mino, b: Board): bool =
   return not m.getBlock.isOverlap(blk)
 
 proc canMoveLeft(m: Mino, b: Board): bool = 
+  if m.x - 1 < 0:
+    return false
   let blk = b.fetchBlock(x = m.x - 1, y = m.y)
   return not m.getBlock.isOverlap(blk)
 
