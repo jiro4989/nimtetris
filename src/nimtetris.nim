@@ -1,3 +1,5 @@
+import random, strutils
+
 type
   Board = seq[seq[int]]
   MinoBoard = ref object
@@ -167,4 +169,17 @@ proc updateCurrentBoard(m: Mino) =
   ## 現在のボードに降下不可能になったミノをセットする
   currentBoard.setMino m
   displayBoard = currentBoard
-  
+
+proc newRandomMino(): Mino =
+  let r = random(max = minos.len)
+  return Mino(minoIndex: r, x: 4, y: 0)
+
+proc show(b: Board) =
+  ## for Debug
+  echo "------------------------------------"
+  for row in b:
+    echo row.join
+  echo "------------------------------------"
+
+when isMainModule:
+  randomize()
