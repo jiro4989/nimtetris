@@ -160,7 +160,20 @@ suite "isDeletable":
     check @[0, 0, 0, 0].isDeletable == false
 
 suite "fetchRow":
-  discard
+  const board = @[
+    @[1, 0, 0, 0, 0, 0, 1],
+    @[1, 0, 0, 0, 0, 0, 1],
+    @[1, 0, 0, 0, 0, 0, 1],
+    @[1, 0, 0, 0, 0, 0, 1],
+    @[1, 0, 1, 0, 0, 0, 1],
+    @[1, 1, 1, 1, 1, 1, 1],
+  ]
+
+  let mb = MinoBoard(board: board, offset: 1)
+  test "ミノの存在しない行を取得する":
+    check mb.fetchRow(0) == @[0, 0, 0, 0, 0]
+  test "ミノの存在する行を取得する":
+    check mb.fetchRow(4) == @[0, 1, 0, 0, 0]
 
 suite "setMino":
   discard
