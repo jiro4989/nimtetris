@@ -91,11 +91,11 @@ suite "isOverlap":
     ]) == false)
 
 const board1 = @[
-  @[1, 0, 0, 0, 0, 0, 1],
-  @[1, 0, 0, 0, 0, 0, 1],
-  @[1, 0, 0, 0, 0, 0, 1],
-  @[1, 0, 0, 0, 0, 0, 1],
-  @[1, 0, 0, 0, 0, 0, 1],
+  @[1, 0, 0, 0, 0, 1, 1],
+  @[1, 0, 0, 0, 0, 1, 1],
+  @[1, 0, 0, 0, 0, 1, 1],
+  @[1, 0, 0, 0, 0, 1, 1],
+  @[1, 0, 0, 0, 0, 1, 1],
   @[1, 1, 1, 1, 1, 1, 1],
 ]
 
@@ -103,11 +103,11 @@ suite "canMoveRight":
   test "移動可能":
     check(Mino(minoIndex: 0, x: 0, y: 0).canMoveRight(board1) == true)
   test "移動可能。移動後は壁に接する":
-    check(Mino(minoIndex: 0, x: 2, y: 0).canMoveRight(board1) == true)
+    check(Mino(minoIndex: 0, x: 1, y: 0).canMoveRight(board1) == true)
   test "移動不可。壁と重なる":
+    check(Mino(minoIndex: 0, x: 2, y: 0).canMoveRight(board1) == false)
+  test "移動不可。配列範囲外":
     check(Mino(minoIndex: 0, x: 3, y: 0).canMoveRight(board1) == false)
-  test "移動不可":
-    check(Mino(minoIndex: 0, x: 4, y: 0).canMoveRight(board1) == false)
 
 suite "canMoveLeft":
   const board2 = @[
