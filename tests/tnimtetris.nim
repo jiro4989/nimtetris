@@ -108,3 +108,20 @@ suite "canMoveRight":
     check(Mino(minoIndex: 0, x: 3, y: 0).canMoveRight(board1) == false)
   test "移動不可":
     check(Mino(minoIndex: 0, x: 4, y: 0).canMoveRight(board1) == false)
+
+suite "canMoveLeft":
+  const board2 = @[
+    @[1, 1, 0, 0, 0, 0, 1],
+    @[1, 1, 0, 0, 0, 0, 1],
+    @[1, 1, 0, 0, 0, 0, 1],
+    @[1, 1, 0, 0, 0, 0, 1],
+    @[1, 1, 0, 0, 0, 0, 1],
+    @[1, 1, 1, 1, 1, 1, 1],
+  ]
+
+  test "移動可能。壁に接する":
+    check(Mino(minoIndex: 0, x: 2, y: 0).canMoveLeft(board2) == true)
+  test "移動不可。壁と重なる":
+    check(Mino(minoIndex: 0, x: 1, y: 0).canMoveLeft(board2) == false)
+  test "移動不可。配列範囲外":
+    check(Mino(minoIndex: 0, x: 0, y: 0).canMoveLeft(board2) == false)
