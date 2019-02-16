@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="static/js/nimtetris.js"></script>
+    <script>
+        window.onload = function () {
+            let body = document.getElementById("tetrisBody");
+            for (let i = 0; i < displayBoard.length; i++) {
+                let tr = body.insertRow(-1);
+                let row = displayBoard[i];
+                for (let j = 0; j < row.length; j++) {
+                    let cell = row[j];
+                    let td = document.createElement("td");
+                    td.innerHTML = cell;
+                    tr.appendChild(td);
+                }
+            }
+        }
+    </script>
+    <title>NimTetris</title>
+</head>
+
+<body>
+
+    <table>
+        <tbody id="tetrisBody">
+        </tbody>
+    </table>
+
+</body>
+
+</html>
