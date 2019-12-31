@@ -2,16 +2,18 @@
 
 version       = "0.1.0"
 author        = "jiro4989"
-description   = "A new awesome nimble package"
+description   = "Terminal tetris"
 license       = "MIT"
 srcDir        = "src"
 bin           = @["nimtetris"]
+binDir        = "bin"
 
 import strformat
 
 # Dependencies
 
-requires "nim >= 0.19.0"
+requires "nim >= 1.0.0"
+requires "illwill >= 0.1.0"
 
 task buildjs, "JSをビルドする":
   let packageName = bin[0]

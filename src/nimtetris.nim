@@ -1,16 +1,39 @@
-import random, strutils
+import os, random, strutils, times
+
+import illwill
 
 type
-  Board = seq[seq[int]]
+  Game = ref object
+    tb: TerminalBuffer
+    minoboard: MinoBoard
+    startTime: DateTime
+    endTime: DateTime
+    score: int64
   MinoBoard = ref object
     board: Board
     offset: int
+  Board = seq[seq[int]]
   Block = array[4, array[4, int]]
   Mino = ref object
     rotateIndex: int
     minoIndex: int
     x: int
     y: int
+
+proc newMinoBoard(): MinoBoard =
+  result = new MinoBoard
+
+proc newGame(): Game =
+  result = new Game
+  result.minoboard = newMinoBoard()
+  result.startTime = now()
+
+proc redraw(game: Game) =
+  let timeDiff = now() - game.startTime
+  game.tb.write(0, 0, $timeDiff)
+  for y, row in game.minoboard.board:
+    let line = row.join(" ")
+    game.tb.write(0, y+1, line)
 
 const initialBoard: Board = @[
   @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -181,3 +204,55 @@ proc show(b: Board) =
   for row in b:
     echo row.join
   echo "------------------------------------"
+
+proc exitProc() {.noconv.} =
+  ## 終了処理
+  illwillDeinit()
+  showCursor()
+
+proc main(): int =
+  illwillInit(fullscreen=true)
+  setControlCHook(exitProc)
+  hideCursor()
+
+  var game = newGame()
+  while true:
+    # 後から端末の幅が変わる場合があるため
+    # 端末の幅情報はループの都度取得
+    let tw = terminalWidth()
+    let th = terminalHeight()
+
+    game.tb = newTerminalBuffer(tw, th)
+    #tb.setForegroundColor(fgWhite, true)
+
+    # 画面の再描画
+    game.redraw()
+
+    # var key = getKey()
+    # case key
+    # of Key.None: discard
+    # of Key.Escape, Key.Q:
+    #   return exitProc()
+    # of Key.J:
+    #   discard
+    # of Key.K:
+    #   discard
+    # of Key.H:
+    #   discard
+    # of Key.L:
+    #   discard
+    # of Key.Space:
+    #   discard
+    # of Key.C:
+    #   discard
+    # of Key.Enter:
+    #   discard
+    # of Key.S:
+    #   discard
+    # else: discard
+
+    game.tb.display()
+    sleep(1000)
+
+when isMainModule and not defined modeTest:
+  quit main()
