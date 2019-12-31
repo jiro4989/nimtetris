@@ -1,4 +1,4 @@
-import os, random, strutils, times
+import os, random, strutils, times, threadpool
 
 import illwill
 
@@ -9,6 +9,7 @@ type
     startTime: DateTime
     endTime: DateTime
     score: int64
+    isStopped: bool
   MinoBoard = ref object
     board: Board
     offset: int
@@ -79,13 +80,13 @@ const
 
 
 proc newMinoBoard(): MinoBoard =
-  result = new MinoBoard
-  result.board = initialBoard
+  result = MinoBoard(board: initialBoard)
 
 proc newGame(): Game =
-  result = new Game
-  result.minoboard = newMinoBoard()
-  result.startTime = now()
+  result = Game(
+    minoboard: newMinoBoard(),
+    startTime: now(),
+    endTime: now())
 
 proc redraw(game: Game) =
   let timeDiff = now() - game.startTime
@@ -218,13 +219,41 @@ proc exitProc() {.noconv.} =
   illwillDeinit()
   showCursor()
 
+proc startKeyInput(game: Game) =
+  while true:
+    var key = getKey()
+    echo key
+    case key
+    of Key.None: discard
+    of Key.Escape, Key.Q:
+      game.isStopped = true
+      break
+    of Key.J:
+      discard
+    of Key.K:
+      discard
+    of Key.H:
+      discard
+    of Key.L:
+      discard
+    of Key.Space:
+      discard
+    of Key.C:
+      discard
+    of Key.Enter:
+      discard
+    of Key.S:
+      discard
+    else: discard
+
 proc main(): int =
   illwillInit(fullscreen=true)
   setControlCHook(exitProc)
   hideCursor()
 
   var game = newGame()
-  while true:
+  spawn game.startKeyInput()
+  while game.isStopped:
     # 後から端末の幅が変わる場合があるため
     # 端末の幅情報はループの都度取得
     let tw = terminalWidth()
@@ -236,31 +265,10 @@ proc main(): int =
     # 画面の再描画
     game.redraw()
 
-    # var key = getKey()
-    # case key
-    # of Key.None: discard
-    # of Key.Escape, Key.Q:
-    #   return exitProc()
-    # of Key.J:
-    #   discard
-    # of Key.K:
-    #   discard
-    # of Key.H:
-    #   discard
-    # of Key.L:
-    #   discard
-    # of Key.Space:
-    #   discard
-    # of Key.C:
-    #   discard
-    # of Key.Enter:
-    #   discard
-    # of Key.S:
-    #   discard
-    # else: discard
-
     game.tb.display()
     sleep(1000)
+  sync()
+  exitProc()
 
 when isMainModule and not defined modeTest:
   quit main()
