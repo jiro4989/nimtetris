@@ -20,21 +20,6 @@ type
     x: int
     y: int
 
-proc newMinoBoard(): MinoBoard =
-  result = new MinoBoard
-
-proc newGame(): Game =
-  result = new Game
-  result.minoboard = newMinoBoard()
-  result.startTime = now()
-
-proc redraw(game: Game) =
-  let timeDiff = now() - game.startTime
-  game.tb.write(0, 0, $timeDiff)
-  for y, row in game.minoboard.board:
-    let line = row.join(" ")
-    game.tb.write(0, y+1, line)
-
 const initialBoard: Board = @[
   @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -55,6 +40,28 @@ const initialBoard: Board = @[
   @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
+
+proc newMinoBoard(): MinoBoard =
+  result = new MinoBoard
+  result.board = initialBoard
+
+proc newGame(): Game =
+  result = new Game
+  result.minoboard = newMinoBoard()
+  result.startTime = now()
+
+proc redraw(game: Game) =
+  let timeDiff = now() - game.startTime
+  game.tb.write(0, 0, $timeDiff)
+  for y, row in game.minoboard.board:
+    # 行を描画
+    for x, cell in row:
+      if cell == 0:
+        game.tb.setBackgroundColor(bgBlack)
+      else:
+        game.tb.setBackgroundColor(bgWhite)
+      game.tb.write(x*2, y+1, "  ")
+      game.tb.resetAttributes()
 
 var
   ## 現在のボード
