@@ -1,4 +1,4 @@
-import os, random, strutils, times, threadpool
+import os, random, strutils, times, threadpool, locks
 
 import illwill
 
@@ -78,6 +78,9 @@ const
     ],
     ]
 
+var
+  thr: Thread[Game]
+  L: Lock
 
 proc newMinoBoard(): MinoBoard =
   result = MinoBoard(board: initialBoard)
@@ -219,10 +222,12 @@ proc exitProc() {.noconv.} =
   illwillDeinit()
   showCursor()
 
-proc startKeyInput(game: Game) =
+proc startKeyInput(game: Game) {.thread.} =
   while true:
-    var key = getKey()
-    echo key
+    acquire(L)
+    {.gcsafe.}:
+      var key = getKey()
+    release(L)
     case key
     of Key.None: discard
     of Key.Escape, Key.Q:
@@ -251,8 +256,10 @@ proc main(): int =
   setControlCHook(exitProc)
   hideCursor()
 
+  initLock(L)
+
   var game = newGame()
-  spawn game.startKeyInput()
+  createThread(thr, startKeyInput, game)
   while game.isStopped:
     # 後から端末の幅が変わる場合があるため
     # 端末の幅情報はループの都度取得
@@ -267,6 +274,7 @@ proc main(): int =
 
     game.tb.display()
     sleep(1000)
+  joinThread(thr)
   sync()
   exitProc()
 

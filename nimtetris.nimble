@@ -12,7 +12,7 @@ import strformat
 
 # Dependencies
 
-requires "nim >= 1.0.0"
+requires "nim >= 1.2.0"
 requires "illwill >= 0.1.0"
 
 task buildjs, "JSをビルドする":
