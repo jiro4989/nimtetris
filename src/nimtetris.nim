@@ -80,7 +80,7 @@ const
     ]
 
 var
-  thr: array[2, Thread[Game]]
+  thr: array[2, Thread[int]]
   L: Lock
 
 proc newMinoBoard(): MinoBoard =
@@ -244,44 +244,47 @@ proc exitProc() {.noconv.} =
   illwillDeinit()
   showCursor()
 
-proc waitKeyInput(game: Game) {.thread.} =
+var game = newGame()
+proc waitKeyInput(n: int) {.thread.} =
   while true:
     acquire(L)
     {.gcsafe.}:
       var key = getKey()
+      case key
+      of Key.None: discard
+      of Key.Escape, Key.Q:
+        game.isStopped = true
+        release(L)
+        break
+      of Key.J:
+        game.moveDown()
+      of Key.K:
+        # 何もしない
+        discard
+      of Key.H:
+        game.moveLeft()
+      of Key.L:
+        game.moveRight()
+      of Key.Space:
+        discard
+      of Key.C:
+        discard
+      of Key.Enter:
+        discard
+      of Key.S:
+        discard
+      else: discard
     release(L)
-    case key
-    of Key.None: discard
-    of Key.Escape, Key.Q:
-      game.isStopped = true
-      break
-    of Key.J:
-      game.moveDown()
-    of Key.K:
-      # 何もしない
-      discard
-    of Key.H:
-      game.moveLeft()
-    of Key.L:
-      game.moveRight()
-    of Key.Space:
-      discard
-    of Key.C:
-      discard
-    of Key.Enter:
-      discard
-    of Key.S:
-      discard
-    else: discard
     sleep 10
 
-proc startMinoDownClock(game: Game) {.thread.} =
+proc startMinoDownClock(n: int) {.thread.} =
   while true:
     acquire(L)
-    if game.isStopped:
-      release(L)
-      break
-    game.moveDown()
+    {.gcsafe.}:
+      if game.isStopped:
+        release(L)
+        break
+      game.moveDown()
     release(L)
     sleep 1000
 
@@ -292,9 +295,8 @@ proc main(): int =
 
   initLock(L)
 
-  var game = newGame()
-  createThread(thr[0], waitKeyInput, game)
-  createThread(thr[1], startMinoDownClock, game)
+  createThread(thr[0], waitKeyInput, 0)
+  createThread(thr[1], startMinoDownClock, 0)
   while not game.isStopped:
     # 後から端末の幅が変わる場合があるため
     # 端末の幅情報はループの都度取得
@@ -308,7 +310,7 @@ proc main(): int =
     game.redraw()
 
     game.tb.display()
-    sleep(1000)
+    sleep(100)
   joinThreads(thr)
   sync()
   exitProc()
