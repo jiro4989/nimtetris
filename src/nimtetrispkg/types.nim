@@ -23,3 +23,6 @@ proc isOverlap*(self: Block, target: Block): bool =
         return true
   return false
 
+proc setRow*(self: var Board, row: seq[int], x, y: int) =
+  for xx, cell in row:
+    self[y][x + xx] = cell

@@ -61,6 +61,7 @@ proc startMinoDownClock(n: int) {.thread.} =
       else:
         gameobj.setCurrentMino()
         gameobj.setRandomMino()
+      gameobj.deleteFilledRows()
     release(L)
     sleep 1000
 

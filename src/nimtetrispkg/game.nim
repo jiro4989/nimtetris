@@ -67,25 +67,25 @@ proc fetchRow(mb: MinoBoard, n: int): seq[int] =
   let row = mb.board[n]
   return row[mb.offset .. row.len - 1 - mb.offset]
 
-iterator rows(mb: MinoBoard): (int, seq[int]) =
-  for i in 0 ..< mb.board.len:
-    let row = mb.fetchRow(i)
-    yield (i, row)
-
 proc isDeletable(row: seq[int]): bool =
   for c in row:
     if c <= 0:
       return false
   return true
 
-proc deleteRow(mb: MinoBoard, i: int) =
-  # TODO
-  discard
+proc deleteRow(mb: var MinoBoard, y: int) =
+  let row = mb.fetchRow(y)
+  if not row.isDeletable:
+    return
+  for i in countdown(y, 1):
+    let j = i - 1
+    let row2 = mb.fetchRow(j)
+    let x = mb.offset
+    mb.board.setRow(row2, x, y)
 
 proc deleteFilledRows*(game: Game) =
-  for i, row in game.minoboard.rows:
-    if row.isDeletable:
-      game.minoboard.deleteRow(i)
+  for i in 0 ..< game.minoboard.board.len - game.minoboard.offset:
+    game.minoboard.deleteRow(i)
 
 proc canMoveRight(m: Mino, b: Board): bool = 
   if b[0].len < m.x + 1 + MINO_BLOCK_WIDTH:
