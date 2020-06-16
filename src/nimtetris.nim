@@ -169,6 +169,9 @@ proc canMoveDown(m: Mino, b: Board): bool =
   let blk = b.fetchBlock(x = m.x, y = m.y + 1)
   return not m.getBlock.isOverlap(blk)
 
+proc canMoveDown(game: Game): bool =
+  game.mino.canMoveDown(game.minoboard.board)
+
 proc moveRight(m: var Mino) = m.x.inc
 proc moveLeft(m: var Mino) = m.x.dec
 proc moveDown(m: var Mino) = m.y.inc
@@ -217,6 +220,9 @@ proc setMino(b: var Board, m: Mino) =
       if cell != EMPTY_MINO:
         b[y+m.y][x+m.x] = cell
 
+proc setCurrentMino(game: Game) =
+  game.minoboard.board.setMino(game.mino)
+
 proc updateDisplayBoard(m: Mino) =
   ## 表示用ボードに降下中のミノをセットする
   displayBoard = currentBoard
@@ -228,8 +234,7 @@ proc updateCurrentBoard(m: Mino) =
   displayBoard = currentBoard
 
 proc newRandomMino(): Mino =
-  let r = 0
-  #let r = random(max = minos.len)
+  let r = rand(max = minos.len) - 1
   return Mino(minoIndex: r, x: 4, y: 0)
 
 proc show(b: Board) =
@@ -284,7 +289,11 @@ proc startMinoDownClock(n: int) {.thread.} =
       if game.isStopped:
         release(L)
         break
-      game.moveDown()
+      if game.canMoveDown():
+        game.moveDown()
+      else:
+        game.setCurrentMino()
+        game.mino = newRandomMino()
     release(L)
     sleep 1000
 
