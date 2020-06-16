@@ -295,7 +295,7 @@ proc main(): int =
   var game = newGame()
   createThread(thr[0], waitKeyInput, game)
   createThread(thr[1], startMinoDownClock, game)
-  while game.isStopped:
+  while not game.isStopped:
     # 後から端末の幅が変わる場合があるため
     # 端末の幅情報はループの都度取得
     let tw = terminalWidth()
