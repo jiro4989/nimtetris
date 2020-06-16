@@ -11,12 +11,12 @@ type
     score: int64
     isStopped: bool
     mino: Mino
-  MinoBoard = ref object
+  MinoBoard = object
     board: Board
     offset: int
   Board = seq[seq[int]]
   Block = array[4, array[4, int]]
-  Mino = ref object
+  Mino = object
     rotateIndex: int
     minoIndex: int
     x: int
@@ -95,10 +95,16 @@ proc newGame(): Game =
     mino: newRandomMino(),
   )
 
+proc setMino(b: var Board, m: Mino)
 proc redraw(game: Game) =
   let timeDiff = now() - game.startTime
   game.tb.write(0, 0, $timeDiff)
-  for y, row in game.minoboard.board:
+
+  # 画面描画用のボードを生成
+  var board = game.minoboard.board
+  board.setMino(game.mino)
+
+  for y, row in board:
     # 行を描画
     for x, cell in row:
       if cell == 0:
@@ -163,9 +169,9 @@ proc canMoveDown(m: Mino, b: Board): bool =
   let blk = b.fetchBlock(x = m.x, y = m.y + 1)
   return not m.getBlock.isOverlap(blk)
 
-proc moveRight(m: Mino) = m.x.inc
-proc moveLeft(m: Mino) = m.x.dec
-proc moveDown(m: Mino) = m.y.inc
+proc moveRight(m: var Mino) = m.x.inc
+proc moveLeft(m: var Mino) = m.x.dec
+proc moveDown(m: var Mino) = m.y.inc
 
 proc moveLeft(game: Game) =
   if game.mino.canMoveLeft(game.minoboard.board):
