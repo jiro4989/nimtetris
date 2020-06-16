@@ -150,6 +150,14 @@ const
       ],
     ],
   ]
+  MINO_BLOCK_WIDTH* = 4
+  EMPTY_MINO* = 0
+  FILLED_MINO1* = 1
+  FILLED_MINO2* = 2
+  FILLED_MINO3* = 4
+  FILLED_MINO4* = 8
+  FILLED_MINO5* = 16
+  FILLED_MINO6* = 32
 
 randomize()
 

@@ -37,9 +37,6 @@ const
     @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   ]
-  MINO_BLOCK_WIDTH = 4
-  EMPTY_MINO = 0
-  WALL_MINO = 1
 
 proc newMinoBoard(): MinoBoard =
   result = MinoBoard(board: initialBoard, offset: 2)
@@ -160,6 +157,17 @@ proc rotateLeft*(game: Game) =
   if game.canRotateLeft():
     game.mino.rotateLeft()
 
+proc color(n: int): BackgroundColor =
+  case n
+  of EMPTY_MINO: bgBlack
+  of FILLED_MINO1: bgWhite
+  of FILLED_MINO2: bgRed
+  of FILLED_MINO3: bgGreen
+  of FILLED_MINO4: bgYellow
+  of FILLED_MINO5: bgBlue
+  of FILLED_MINO6: bgMagenta
+  else: bgBlack
+
 proc redraw*(game: Game) =
   # 後から端末の幅が変わる場合があるため
   # 端末の幅情報はループの都度取得
@@ -177,10 +185,8 @@ proc redraw*(game: Game) =
   for y, row in board:
     # 行を描画
     for x, cell in row:
-      if cell == 0:
-        game.tb.setBackgroundColor(bgBlack)
-      else:
-        game.tb.setBackgroundColor(bgWhite)
+      let c = cell.color()
+      game.tb.setBackgroundColor(c)
       game.tb.write(x*2, y+1, "  ")
       game.tb.resetAttributes()
   game.tb.display()
