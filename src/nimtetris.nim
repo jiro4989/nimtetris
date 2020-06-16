@@ -1,171 +1,18 @@
-import os, strutils, times, threadpool, locks
+import os, threadpool, locks
 import illwill
-import nimtetrispkg/[mino, types]
-
-type
-  Game = ref object
-    tb: TerminalBuffer
-    minoboard: MinoBoard
-    startTime: DateTime
-    endTime: DateTime
-    score: int64
-    isStopped: bool
-    mino: Mino
-  MinoBoard = object
-    board: Board
-    offset: int
-
-const
-  initialBoard: Board = @[
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  ]
+import nimtetrispkg/game
 
 var
   thr: array[2, Thread[int]]
   L: Lock
-
-proc newMinoBoard(): MinoBoard =
-  result = MinoBoard(board: initialBoard)
-
-proc newGame(): Game =
-  result = Game(
-    minoboard: newMinoBoard(),
-    startTime: now(),
-    endTime: now(),
-    mino: newRandomMino(),
-  )
-
-proc setMino(b: var Board, m: Mino)
-proc redraw(game: Game) =
-  let timeDiff = now() - game.startTime
-  game.tb.write(0, 0, $timeDiff)
-
-  # 画面描画用のボードを生成
-  var board = game.minoboard.board
-  board.setMino(game.mino)
-
-  for y, row in board:
-    # 行を描画
-    for x, cell in row:
-      if cell == 0:
-        game.tb.setBackgroundColor(bgBlack)
-      else:
-        game.tb.setBackgroundColor(bgWhite)
-      game.tb.write(x*2, y+1, "  ")
-      game.tb.resetAttributes()
-
-var
-  ## 現在のボード
-  currentBoard = initialBoard
-  ## 表示上のボード
-  ## currentBoardに移動中のミノをセットしたりする
-  displayBoard = initialBoard
-
-const
-  MINO_BLOCK_WIDTH = 4
-  EMPTY_MINO = 0
-  WALL_MINO = 1
-
-proc canMoveRight(m: Mino, b: Board): bool = 
-  if b[0].len < m.x + 1 + MINO_BLOCK_WIDTH:
-    return false
-  let blk = b.fetchBlock(x = m.x + 1, y = m.y)
-  return not m.getBlock.isOverlap(blk)
-
-proc canMoveLeft(m: Mino, b: Board): bool = 
-  if m.x - 1 < 0:
-    return false
-  let blk = b.fetchBlock(x = m.x - 1, y = m.y)
-  return not m.getBlock.isOverlap(blk)
-
-proc canMoveDown(m: Mino, b: Board): bool = 
-  if b.len < m.y + 1 + MINO_BLOCK_WIDTH:
-    return false
-  let blk = b.fetchBlock(x = m.x, y = m.y + 1)
-  return not m.getBlock.isOverlap(blk)
-
-proc canMoveDown(game: Game): bool =
-  game.mino.canMoveDown(game.minoboard.board)
-
-proc moveLeft(game: Game) =
-  if game.mino.canMoveLeft(game.minoboard.board):
-    game.mino.moveLeft()
-
-proc moveRight(game: Game) =
-  if game.mino.canMoveRight(game.minoboard.board):
-    game.mino.moveRight()
-
-proc moveDown(game: Game) =
-  if game.mino.canMoveDown(game.minoboard.board):
-    game.mino.moveDown()
-
-proc rotateRight(game: Game) =
-  game.mino.rotateRight()
-
-proc rotateLeft(game: Game) =
-  game.mino.rotateLeft()
-
-proc isDeletable(row: seq[int]): bool =
-  for c in row:
-    if c <= 0:
-      return false
-  return true
-
-proc fetchRow(mb: MinoBoard, n: int): seq[int] =
-  let row = mb.board[n]
-  return row[mb.offset .. row.len - 1 - mb.offset]
-
-proc setMino(b: var Board, m: Mino) =
-  let blk = m.getBlock
-  for y, row in blk:
-    for x, cell in row:
-      # 空のミノはセットしないようにする
-      if cell != EMPTY_MINO:
-        b[y+m.y][x+m.x] = cell
-
-proc setCurrentMino(game: Game) =
-  game.minoboard.board.setMino(game.mino)
-
-proc updateDisplayBoard(m: Mino) =
-  ## 表示用ボードに降下中のミノをセットする
-  displayBoard = currentBoard
-  displayBoard.setMino m
-
-proc updateCurrentBoard(m: Mino) =
-  ## 現在のボードに降下不可能になったミノをセットする
-  currentBoard.setMino m
-  displayBoard = currentBoard
-
-proc show(b: Board) =
-  ## for Debug
-  echo "------------------------------------"
-  for row in b:
-    echo row.join
-  echo "------------------------------------"
 
 proc exitProc() {.noconv.} =
   ## 終了処理
   illwillDeinit()
   showCursor()
 
-var game = newGame()
+var gameobj = newGame()
+
 proc waitKeyInput(n: int) {.thread.} =
   while true:
     acquire(L)
@@ -174,22 +21,22 @@ proc waitKeyInput(n: int) {.thread.} =
       case key
       of Key.None: discard
       of Key.Escape, Key.Q:
-        game.isStopped = true
+        gameobj.stop()
         release(L)
         break
       of Key.U:
-        game.rotateLeft()
+        gameobj.rotateLeft()
       of Key.O:
-        game.rotateRight()
+        gameobj.rotateRight()
       of Key.J:
-        game.moveDown()
+        gameobj.moveDown()
       of Key.K:
         # 何もしない
         discard
       of Key.H:
-        game.moveLeft()
+        gameobj.moveLeft()
       of Key.L:
-        game.moveRight()
+        gameobj.moveRight()
       of Key.Space:
         discard
       of Key.C:
@@ -206,14 +53,14 @@ proc startMinoDownClock(n: int) {.thread.} =
   while true:
     acquire(L)
     {.gcsafe.}:
-      if game.isStopped:
+      if gameobj.isStopped:
         release(L)
         break
-      if game.canMoveDown():
-        game.moveDown()
+      if gameobj.canMoveDown():
+        gameobj.moveDown()
       else:
-        game.setCurrentMino()
-        game.mino = newRandomMino()
+        gameobj.setCurrentMino()
+        gameobj.setRandomMino()
     release(L)
     sleep 1000
 
@@ -226,19 +73,8 @@ proc main(): int =
 
   createThread(thr[0], waitKeyInput, 0)
   createThread(thr[1], startMinoDownClock, 0)
-  while not game.isStopped:
-    # 後から端末の幅が変わる場合があるため
-    # 端末の幅情報はループの都度取得
-    let tw = terminalWidth()
-    let th = terminalHeight()
-
-    game.tb = newTerminalBuffer(tw, th)
-    #tb.setForegroundColor(fgWhite, true)
-
-    # 画面の再描画
-    game.redraw()
-
-    game.tb.display()
+  while not gameobj.isStopped:
+    gameobj.redraw()
     sleep(100)
   joinThreads(thr)
   sync()
