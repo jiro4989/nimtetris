@@ -281,7 +281,7 @@ proc startMinoDownClock(game: Game) {.thread.} =
     if game.isStopped:
       release(L)
       break
-    inc(game.mino.y)
+    game.moveDown()
     release(L)
     sleep 1000
 
