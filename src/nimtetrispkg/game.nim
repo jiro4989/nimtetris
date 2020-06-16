@@ -128,16 +128,12 @@ proc moveDownToBottom*(game: Game) =
   game.setRandomMino()
 
 proc canRotate*(game: Game, mino: Mino): bool =
-  let x = mino.x + game.minoboard.offset
-  let y = mino.y
-  let blk = mino.getBlock()
-  for yy, row in blk:
-    for xx, col in blk[yy]:
-      let c = game.minoboard.board[y + yy][x + xx]
-      let s = c + col
-      if EMPTY_MINO notin [c, s]:
-        return false
-  return true
+  let
+    x = mino.x + game.minoboard.offset
+    y = mino.y + game.minoboard.offset
+    blk = mino.getBlock
+    blk2 = game.minoboard.board.fetchBlock(x, y)
+  return not blk.isOverlap(blk2)
 
 proc canRotateRight*(game: Game): bool =
   var mino = game.mino
@@ -166,6 +162,8 @@ proc color(n: int): BackgroundColor =
   of FILLED_MINO4: bgYellow
   of FILLED_MINO5: bgBlue
   of FILLED_MINO6: bgMagenta
+  of FILLED_MINO7: bgCyan
+  of FILLED_MINO8: bgCyan # FIXME
   else: bgBlack
 
 proc redraw*(game: Game) =
