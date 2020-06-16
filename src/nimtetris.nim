@@ -1,6 +1,6 @@
-import os, random, strutils, times, threadpool, locks
-
+import os, strutils, times, threadpool, locks
 import illwill
+import nimtetrispkg/[mino, types]
 
 type
   Game = ref object
@@ -14,13 +14,6 @@ type
   MinoBoard = object
     board: Board
     offset: int
-  Board = seq[seq[int]]
-  Block = array[4, array[4, int]]
-  Mino = object
-    rotateIndex: int
-    minoIndex: int
-    x: int
-    y: int
 
 const
   initialBoard: Board = @[
@@ -42,42 +35,7 @@ const
     @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     @[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    ]
-  minos = @[
-    @[
-      [ [0, 0, 0, 0],
-        [0, 1, 1, 0],
-        [0, 1, 1, 0],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-        [0, 1, 0, 0],
-      ],
-      [
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-      ],
-      [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [1, 1, 1, 1],
-        [0, 0, 0, 0],
-      ],
-    ],
-    ]
+  ]
 
 var
   thr: array[2, Thread[int]]
@@ -86,7 +44,6 @@ var
 proc newMinoBoard(): MinoBoard =
   result = MinoBoard(board: initialBoard)
 
-proc newRandomMino(): Mino
 proc newGame(): Game =
   result = Game(
     minoboard: newMinoBoard(),
@@ -126,31 +83,6 @@ const
   EMPTY_MINO = 0
   WALL_MINO = 1
 
-proc fetchBlock(b: Board, x, y: int): Block =
-  ## x, y座標位置の4x4のミノブロックを取得する
-  var i: int
-  for y2 in y..<(y+4):
-    var j: int
-    for x2 in x..<(x+4):
-      let cell = b[y2][x2]
-      result[i][j] = cell
-      inc j
-    inc i
-
-proc isOverlap(self: Block, target: Block): bool =
-  ## 対象のミノブロック同士に重なるものがあるかを判定する。
-  ## 重なっていたらtrueを返す。
-  for y, row in self:
-    for x, cell in row:
-      let targetCell = target[y][x]
-      let overlap = cell + targetCell
-      if 1 < overlap:
-        return true
-  return false
-
-proc getBlock(m: Mino): Block =
-  return minos[m.minoIndex][m.rotateIndex]
-
 proc canMoveRight(m: Mino, b: Board): bool = 
   if b[0].len < m.x + 1 + MINO_BLOCK_WIDTH:
     return false
@@ -172,10 +104,6 @@ proc canMoveDown(m: Mino, b: Board): bool =
 proc canMoveDown(game: Game): bool =
   game.mino.canMoveDown(game.minoboard.board)
 
-proc moveRight(m: var Mino) = m.x.inc
-proc moveLeft(m: var Mino) = m.x.dec
-proc moveDown(m: var Mino) = m.y.inc
-
 proc moveLeft(game: Game) =
   if game.mino.canMoveLeft(game.minoboard.board):
     game.mino.moveLeft()
@@ -188,19 +116,11 @@ proc moveDown(game: Game) =
   if game.mino.canMoveDown(game.minoboard.board):
     game.mino.moveDown()
 
-proc rotateRight(m: var Mino) =
-  let incedIndex = m.rotateIndex + 1
-  m.rotateIndex = if minos[m.minoIndex].len <= incedIndex:
-    0
-  else:
-    incedIndex
+proc rotateRight(game: Game) =
+  game.mino.rotateRight()
 
-proc rotateLeft(m: var Mino) =
-  let decedIndex = m.rotateIndex - 1
-  m.rotateIndex = if decedIndex < 0:
-    minos[m.minoIndex].len - 1
-  else:
-    decedIndex
+proc rotateLeft(game: Game) =
+  game.mino.rotateLeft()
 
 proc isDeletable(row: seq[int]): bool =
   for c in row:
@@ -233,10 +153,6 @@ proc updateCurrentBoard(m: Mino) =
   currentBoard.setMino m
   displayBoard = currentBoard
 
-proc newRandomMino(): Mino =
-  let r = rand(max = minos.len) - 1
-  return Mino(minoIndex: r, x: 4, y: 0)
-
 proc show(b: Board) =
   ## for Debug
   echo "------------------------------------"
@@ -261,6 +177,10 @@ proc waitKeyInput(n: int) {.thread.} =
         game.isStopped = true
         release(L)
         break
+      of Key.U:
+        game.rotateLeft()
+      of Key.O:
+        game.rotateRight()
       of Key.J:
         game.moveDown()
       of Key.K:
