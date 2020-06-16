@@ -19,8 +19,7 @@ proc isOverlap*(self: Block, target: Block): bool =
   for y, row in self:
     for x, cell in row:
       let targetCell = target[y][x]
-      let overlap = cell + targetCell
-      if 1 < overlap:
+      if 0 notin [cell, targetCell]:
         return true
   return false
 
