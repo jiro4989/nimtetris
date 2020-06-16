@@ -42,7 +42,7 @@ const
   WALL_MINO = 1
 
 proc newMinoBoard(): MinoBoard =
-  result = MinoBoard(board: initialBoard)
+  result = MinoBoard(board: initialBoard, offset: 2)
 
 proc newGame*(): Game =
   result = Game(
@@ -56,11 +56,25 @@ proc fetchRow(mb: MinoBoard, n: int): seq[int] =
   let row = mb.board[n]
   return row[mb.offset .. row.len - 1 - mb.offset]
 
-proc isDeletable*(row: seq[int]): bool =
+iterator rows(mb: MinoBoard): (int, seq[int]) =
+  for i in 0 ..< mb.board.len:
+    let row = mb.fetchRow(i)
+    yield (i, row)
+
+proc isDeletable(row: seq[int]): bool =
   for c in row:
     if c <= 0:
       return false
   return true
+
+proc deleteRow(mb: MinoBoard, i: int) =
+  # TODO
+  discard
+
+proc deleteFilledRows*(game: Game) =
+  for i, row in game.minoboard.rows:
+    if row.isDeletable:
+      game.minoboard.deleteRow(i)
 
 proc canMoveRight(m: Mino, b: Board): bool = 
   if b[0].len < m.x + 1 + MINO_BLOCK_WIDTH:
