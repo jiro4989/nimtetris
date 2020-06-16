@@ -130,11 +130,35 @@ proc moveDownToBottom*(game: Game) =
   game.setCurrentMino()
   game.setRandomMino()
 
+proc canRotate*(game: Game, mino: Mino): bool =
+  let x = mino.x + game.minoboard.offset
+  let y = mino.y
+  let blk = mino.getBlock()
+  for yy, row in blk:
+    for xx, col in blk[yy]:
+      let c = game.minoboard.board[y + yy][x + xx]
+      let s = c + col
+      if EMPTY_MINO notin [c, s]:
+        return false
+  return true
+
+proc canRotateRight*(game: Game): bool =
+  var mino = game.mino
+  mino.rotateRight()
+  game.canRotate(mino)
+
+proc canRotateLeft*(game: Game): bool =
+  var mino = game.mino
+  mino.rotateLeft()
+  game.canRotate(mino)
+
 proc rotateRight*(game: Game) =
-  game.mino.rotateRight()
+  if game.canRotateRight():
+    game.mino.rotateRight()
 
 proc rotateLeft*(game: Game) =
-  game.mino.rotateLeft()
+  if game.canRotateLeft():
+    game.mino.rotateLeft()
 
 proc redraw*(game: Game) =
   # 後から端末の幅が変わる場合があるため
