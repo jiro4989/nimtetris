@@ -52,6 +52,20 @@ proc newGame*(): Game =
     mino: newRandomMino(),
   )
 
+proc setRandomMino*(game: Game) =
+  game.mino = newRandomMino()
+
+proc setMino*(b: var Board, m: Mino) =
+  let blk = m.getBlock
+  for y, row in blk:
+    for x, cell in row:
+      # 空のミノはセットしないようにする
+      if cell != EMPTY_MINO:
+        b[y+m.y][x+m.x] = cell
+
+proc setCurrentMino*(game: Game) =
+  game.minoboard.board.setMino(game.mino)
+
 proc fetchRow(mb: MinoBoard, n: int): seq[int] =
   let row = mb.board[n]
   return row[mb.offset .. row.len - 1 - mb.offset]
@@ -109,22 +123,18 @@ proc moveDown*(game: Game) =
   if game.mino.canMoveDown(game.minoboard.board):
     game.mino.moveDown()
 
+proc moveDownToBottom*(game: Game) =
+  for i in 1..20:
+    if game.mino.canMoveDown(game.minoboard.board):
+      game.mino.moveDown()
+  game.setCurrentMino()
+  game.setRandomMino()
+
 proc rotateRight*(game: Game) =
   game.mino.rotateRight()
 
 proc rotateLeft*(game: Game) =
   game.mino.rotateLeft()
-
-proc setMino*(b: var Board, m: Mino) =
-  let blk = m.getBlock
-  for y, row in blk:
-    for x, cell in row:
-      # 空のミノはセットしないようにする
-      if cell != EMPTY_MINO:
-        b[y+m.y][x+m.x] = cell
-
-proc setCurrentMino*(game: Game) =
-  game.minoboard.board.setMino(game.mino)
 
 proc redraw*(game: Game) =
   # 後から端末の幅が変わる場合があるため
@@ -156,7 +166,4 @@ proc stop*(game: Game) =
 
 proc isStopped*(game: Game): bool =
   game.isStopped
-
-proc setRandomMino*(game: Game) =
-  game.mino = newRandomMino()
 

@@ -38,7 +38,7 @@ proc waitKeyInput(n: int) {.thread.} =
       of Key.L:
         gameobj.moveRight()
       of Key.Space:
-        discard
+        gameobj.moveDownToBottom()
       of Key.C:
         discard
       of Key.Enter:
