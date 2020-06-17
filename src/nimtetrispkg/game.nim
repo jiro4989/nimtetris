@@ -1,4 +1,4 @@
-import times, times
+import times, times, sequtils
 import illwill
 import mino, types
 
@@ -65,11 +65,11 @@ proc setCurrentMino*(game: Game) =
 
 proc fetchRow(mb: MinoBoard, n: int): seq[int] =
   let row = mb.board[n]
-  return row[mb.offset .. row.len - 1 - mb.offset]
+  return row[mb.offset ..< row.len - mb.offset]
 
 proc isDeletable(row: seq[int]): bool =
   for c in row:
-    if c <= 0:
+    if c == EMPTY_MINO:
       return false
   return true
 
@@ -77,11 +77,13 @@ proc deleteRow(mb: var MinoBoard, y: int) =
   let row = mb.fetchRow(y)
   if not row.isDeletable:
     return
+  let x = mb.offset
   for i in countdown(y, 1):
     let j = i - 1
     let row2 = mb.fetchRow(j)
-    let x = mb.offset
     mb.board.setRow(row2, x, y)
+  let emptyRow = repeat(EMPTY_MINO, mb.board[0].len - mb.offset * 2)
+  mb.board.setRow(emptyRow, x, 0)
 
 proc deleteFilledRows*(game: Game) =
   for i in 0 ..< game.minoboard.board.len - game.minoboard.offset:
