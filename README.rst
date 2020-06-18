@@ -15,6 +15,21 @@ Usage
 
    $ nimtetris
 
+Key bindings
+------------
+
+Vim like key-bindings.
+
+=============== ===================
+Key             Motion
+=============== ===================
+H               Move left
+J               Move down
+L               Move right
+U               Rotate left
+O               Rotate right
+<Space>/<Enter> Move down to bottom
+=============== ===================
 
 Installation
 ============
