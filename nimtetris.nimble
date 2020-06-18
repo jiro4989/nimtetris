@@ -8,13 +8,23 @@ srcDir        = "src"
 bin           = @["nimtetris"]
 binDir        = "bin"
 
-import strformat
-
 # Dependencies
 
-requires "nim >= 1.2.0"
+requires "nim >= 1.2.2"
 requires "illwill >= 0.1.0"
 
-task buildjs, "JSをビルドする":
-  let packageName = bin[0]
-  exec &"nimble js -o:static/js/{packageName}.js src/{packageName}.nim"
+import os, strformat
+
+task archive, "Create archived assets":
+  let app = "APPNAME"
+  let assets = &"{app}_{buildOS}"
+  let dir = "dist"/assets
+  mkDir dir
+  cpDir "bin", dir/"bin"
+  cpFile "LICENSE", dir/"LICENSE"
+  cpFile "README.rst", dir/"README.rst"
+  withDir "dist":
+    when buildOS == "windows":
+      exec &"7z a {assets}.zip {assets}"
+    else:
+      exec &"tar czf {assets}.tar.gz {assets}"
