@@ -81,7 +81,7 @@ proc deleteRow(mb: var MinoBoard, y: int) =
   for i in countdown(y, 1):
     let j = i - 1
     let row2 = mb.fetchRow(j)
-    mb.board.setRow(row2, x, y)
+    mb.board.setRow(row2, x, i)
   let emptyRow = repeat(EMPTY_MINO, mb.board[0].len - mb.offset * 2)
   mb.board.setRow(emptyRow, x, 0)
 
