@@ -1,6 +1,6 @@
 import times, times, sequtils
 import illwill
-import mino, types
+import mino, blocks, board
 
 type
   Game* = ref object
@@ -14,29 +14,6 @@ type
   MinoBoard = object
     board: Board
     offset: int
-
-const
-  initialBoard: Board = @[
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    @[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  ]
 
 proc newMinoBoard(): MinoBoard =
   result = MinoBoard(board: initialBoard, offset: 2)
@@ -131,8 +108,8 @@ proc moveDownToBottom*(game: Game) =
 
 proc canRotate*(game: Game, mino: Mino): bool =
   let
-    x = mino.x + game.minoboard.offset
-    y = mino.y + game.minoboard.offset
+    x = mino.x
+    y = mino.y
     blk = mino.getBlock
     blk2 = game.minoboard.board.fetchBlock(x, y)
   return not blk.isOverlap(blk2)
