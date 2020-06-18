@@ -6,6 +6,10 @@ nimtetris
 
 A terminal tetris in Nim.
 
+|demo-linux|
+
+|demo-win|
+
 .. contents:: Table of contents
 
 Usage
@@ -49,3 +53,5 @@ MIT
    :target: https://nimble.directory/ci/badges/nimtetris/nimdevel/output.html
 .. |nimble-install| image:: https://nimble.directory/ci/badges/nimtetris/nimdevel/status.svg
    :target: https://nimble.directory/ci/badges/nimtetris/nimdevel/output.html
+.. |demo-linux| image:: https://user-images.githubusercontent.com/13825004/85021658-1a7bc900-b1ad-11ea-9e53-c23c3841a518.gif
+.. |demo-win| image:: https://user-images.githubusercontent.com/13825004/85021667-1c458c80-b1ad-11ea-9609-46f30a4b7be7.gif
