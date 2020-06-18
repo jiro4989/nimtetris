@@ -108,8 +108,21 @@ suite "proc canMoveLeft":
     var m = Mino(x: 8, y: 0)
     check m.canMoveLeft(game.minoboard.board)
   test "can move":
-    var m = Mino(x: 4, y: 0)
-    check m.canMoveLeft(game.minoboard.board)
-  test "can not move":
     var m = Mino(x: 3, y: 0)
     check m.canMoveLeft(game.minoboard.board)
+  test "can not move":
+    var m = Mino(x: 2, y: 0)
+    check not m.canMoveLeft(game.minoboard.board)
+
+suite "proc canMoveDown":
+  setup:
+    var game = newGame()
+  test "can move":
+    var m = Mino(x: 4, y: 0)
+    check m.canMoveDown(game.minoboard.board)
+  test "can move":
+    var m = Mino(x: 4, y: 13)
+    check m.canMoveDown(game.minoboard.board)
+  test "can not move":
+    var m = Mino(x: 4, y: 14)
+    check not m.canMoveDown(game.minoboard.board)
