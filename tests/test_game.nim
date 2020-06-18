@@ -235,3 +235,9 @@ suite "proc stop / isStopped":
     check not game.isStopped
     game.stop()
     check game.isStopped
+
+suite "proc labelText":
+  test "TIME":
+    check " TIME     " == labelText("TIME", 10)
+  test "sec":
+    check " 20 sec   " == labelText("20 sec", 10)

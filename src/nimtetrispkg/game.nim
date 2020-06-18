@@ -1,4 +1,7 @@
 import times, times, sequtils
+from strutils import join
+from strformat import `&`
+
 import illwill
 import mino, blocks, board
 
@@ -147,6 +150,29 @@ proc color(n: int): BackgroundColor =
   of FILLED_MINO8: bgCyan # FIXME
   else: bgBlack
 
+proc labelText(t: string, width: int): string =
+  let s = &" {t} "
+  let rightPad = " ".repeat(width - s.len).join
+  return &"{s}{rightPad}"
+
+proc drawArea(tb: var TerminalBuffer, label: string, x, y, width: int, fgColor: ForegroundColor, bgColor: BackgroundColor) =
+  tb.setForegroundColor(fgColor)
+  tb.setBackgroundColor(bgColor)
+  tb.write(x, y, labelText(label, width))
+  tb.resetAttributes()
+
+proc drawTimer(game: Game) =
+  let
+    x = 28
+    y = 5
+    width = 20
+    dur = now() - game.startTime
+    part = dur.toParts
+    sec = part[Seconds]
+
+  game.tb.drawArea("TIME", x, y, width, fgWhite, bgBlack)
+  game.tb.drawArea(&"{sec} sec", x, y+1, width, fgBlack, bgWhite)
+
 proc redraw*(game: Game) =
   # 後から端末の幅が変わる場合があるため
   # 端末の幅情報はループの都度取得
@@ -154,8 +180,7 @@ proc redraw*(game: Game) =
   let th = terminalHeight()
   game.tb = newTerminalBuffer(tw, th)
 
-  let timeDiff = now() - game.startTime
-  game.tb.write(0, 0, $timeDiff)
+  game.drawTimer()
 
   # 画面描画用のボードを生成
   var board = game.minoboard.board
