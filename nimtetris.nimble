@@ -16,13 +16,13 @@ requires "illwill >= 0.1.0"
 import os, strformat
 
 task archive, "Create archived assets":
-  let app = "APPNAME"
+  let app = "nimtetris"
   let assets = &"{app}_{buildOS}"
   let dir = "dist"/assets
   mkDir dir
   cpDir "bin", dir/"bin"
   cpFile "LICENSE", dir/"LICENSE"
-  cpFile "README.rst", dir/"README.rst"
+  cpFile "README.adoc", dir/"README.adoc"
   withDir "dist":
     when buildOS == "windows":
       exec &"7z a {assets}.zip {assets}"
