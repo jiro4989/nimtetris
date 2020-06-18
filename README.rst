@@ -42,6 +42,10 @@ Installation
 
    $ nimble install -Y nimtetris
 
+or
+
+Download from `Releases <https://github.com/jiro4989/nimtetris/releases>`_.
+
 LICENSE
 =======
 
