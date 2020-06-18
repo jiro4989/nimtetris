@@ -98,12 +98,14 @@ proc moveRight*(game: Game) =
 proc moveDown*(game: Game) =
   if game.mino.canMoveDown(game.minoboard.board):
     game.mino.moveDown()
+    game.deleteFilledRows()
 
 proc moveDownToBottom*(game: Game) =
   for i in 1..20:
     if game.mino.canMoveDown(game.minoboard.board):
       game.mino.moveDown()
   game.setCurrentMino()
+  game.deleteFilledRows()
   game.setRandomMino()
 
 proc canRotate*(game: Game, mino: Mino): bool =
