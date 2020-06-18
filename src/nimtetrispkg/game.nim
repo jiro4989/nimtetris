@@ -165,17 +165,17 @@ proc drawArea(tb: var TerminalBuffer, label: string, x, y, width: int, fgColor: 
   tb.write(x, y, labelText(label, width))
   tb.resetAttributes()
 
-proc drawTimer(game: Game) =
+proc drawTimer(game: Game, x, y, width: int) =
   let
-    x = 28
-    y = 5
-    width = 20
     dur = now() - game.startTime
     part = dur.toParts
     sec = part[Seconds]
-
   game.tb.drawArea("TIME", x, y, width, fgWhite, bgBlack)
   game.tb.drawArea(&"{sec} sec", x, y+1, width, fgBlack, bgWhite)
+
+proc drawScore(game: Game, x, y, width: int) =
+  game.tb.drawArea("SCORE", x, y, width, fgWhite, bgBlack)
+  game.tb.drawArea($game.score, x, y+1, width, fgBlack, bgWhite)
 
 proc redraw*(game: Game) =
   # 後から端末の幅が変わる場合があるため
@@ -184,7 +184,13 @@ proc redraw*(game: Game) =
   let th = terminalHeight()
   game.tb = newTerminalBuffer(tw, th)
 
-  game.drawTimer()
+  block:
+    let
+      x = 28
+      y = 5
+      w = 20
+    game.drawTimer(x, y, w)
+    game.drawScore(x, y+3, w)
 
   # 画面描画用のボードを生成
   var board = game.minoboard.board
