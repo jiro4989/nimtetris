@@ -6,7 +6,11 @@ nimtetris
 
 A terminal tetris in Nim.
 
+Linux demo:
+
 |demo-linux|
+
+Windows demo:
 
 |demo-win|
 
