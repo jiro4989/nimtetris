@@ -43,7 +43,7 @@ jobs:
         with:
           nim-version: ${{ env.NIM_VERSION }}
       - run: nimble build -Y
-        #- run: nimble test -Y
+      - run: nimble test -Y
       - name: Archive files
         run: nimble archive
       - name: Release
