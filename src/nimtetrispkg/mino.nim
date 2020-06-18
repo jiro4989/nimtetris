@@ -9,147 +9,6 @@ type
     y*: int
 
 const
-  minos* = @[
-    @[
-      [
-        [0, 0, 0, 0],
-        [0, 2, 2, 0],
-        [2, 2, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 2, 0, 0],
-        [0, 2, 2, 0],
-        [0, 0, 2, 0],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [
-        [0, 0, 0, 0],
-        [0, 4, 4, 0],
-        [0, 0, 4, 4],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 0, 0, 4],
-        [0, 0, 4, 4],
-        [0, 0, 4, 0],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [
-        [0, 0, 0, 0],
-        [0, 8, 0, 0],
-        [8, 8, 8, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [8, 0, 0, 0],
-        [8, 8, 0, 0],
-        [8, 0, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [8, 8, 8, 0],
-        [0, 8, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 0, 8, 0],
-        [0, 8, 8, 0],
-        [0, 0, 8, 0],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [
-        [0, 0, 0, 0],
-        [0, 16, 0, 0],
-        [0, 16, 16, 16],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 16, 16, 0],
-        [0, 16, 0, 0],
-        [0, 16, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 16, 16, 16],
-        [0, 0, 0, 16],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 0, 0, 16],
-        [0, 0, 0, 16],
-        [0, 0, 16, 16],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [
-        [0, 0, 0, 0],
-        [0, 0, 32, 0],
-        [32, 32, 32, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [32, 0, 0, 0],
-        [32, 0, 0, 0],
-        [32, 32, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [32, 32, 32, 0],
-        [32, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 32, 32, 0],
-        [0, 0, 32, 0],
-        [0, 0, 32, 0],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [ [0, 0, 0, 0],
-        [0, 64, 64, 0],
-        [0, 64, 64, 0],
-        [0, 0, 0, 0],
-      ],
-    ],
-    @[
-      [
-        [0, 128, 0, 0],
-        [0, 128, 0, 0],
-        [0, 128, 0, 0],
-        [0, 128, 0, 0],
-      ],
-      [
-        [0, 0, 0, 0],
-        [128, 128, 128, 128],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-      ],
-      [
-        [0, 0, 128, 0],
-        [0, 0, 128, 0],
-        [0, 0, 128, 0],
-        [0, 0, 128, 0],
-      ],
-      [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [128, 128, 128, 128],
-        [0, 0, 0, 0],
-      ],
-    ],
-  ]
   MINO_BLOCK_WIDTH* = 4
   EMPTY_MINO* = 0
   FILLED_MINO1* = 1
@@ -160,6 +19,148 @@ const
   FILLED_MINO6* = 32
   FILLED_MINO7* = 64
   FILLED_MINO8* = 128
+
+  minos* = @[
+    @[
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO2, FILLED_MINO2, EMPTY_MINO],
+        [FILLED_MINO2, FILLED_MINO2, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, FILLED_MINO2, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO2, FILLED_MINO2, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO2, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+    @[
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO3, FILLED_MINO3, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO3, FILLED_MINO3],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO3],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO3, FILLED_MINO3],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO3, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+    @[
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO4, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO4, FILLED_MINO4, FILLED_MINO4, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [FILLED_MINO4, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO4, FILLED_MINO4, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO4, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [FILLED_MINO4, FILLED_MINO4, FILLED_MINO4, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO4, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO4, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO4, FILLED_MINO4, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO4, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+    @[
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO5, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO5, FILLED_MINO5, FILLED_MINO5],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, FILLED_MINO5, FILLED_MINO5, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO5, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO5, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, FILLED_MINO5, FILLED_MINO5, FILLED_MINO5],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO5],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO5],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO5],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO5, FILLED_MINO5],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+    @[
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO6, EMPTY_MINO],
+        [FILLED_MINO6, FILLED_MINO6, FILLED_MINO6, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [FILLED_MINO6, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO6, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO6, FILLED_MINO6, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [FILLED_MINO6, FILLED_MINO6, FILLED_MINO6, EMPTY_MINO],
+        [FILLED_MINO6, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, FILLED_MINO6, FILLED_MINO6, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO6, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO6, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+    @[
+      [ [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO7, FILLED_MINO7, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO7, FILLED_MINO7, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+    @[
+      [
+        [EMPTY_MINO, FILLED_MINO8, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO8, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO8, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO8, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO8, FILLED_MINO8, FILLED_MINO8, FILLED_MINO8],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO8, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO8, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO8, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, FILLED_MINO8, EMPTY_MINO],
+      ],
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [FILLED_MINO8, FILLED_MINO8, FILLED_MINO8, FILLED_MINO8],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ],
+  ]
 
 randomize()
 
