@@ -108,7 +108,7 @@ proc moveDownToBottom*(game: Game) =
 
 proc canRotate*(game: Game, mino: Mino): bool =
   let
-    x = mino.x + game.minoboard.offset
+    x = mino.x
     y = mino.y
     blk = mino.getBlock
     blk2 = game.minoboard.board.fetchBlock(x, y)
