@@ -190,3 +190,16 @@ suite "proc moveDownToBottom":
     check 0 == game.mino.y
     check FILLED_MINO2 == game.minoboard.board[16][4]
     check FILLED_MINO2 == game.minoboard.board[16][5]
+
+suite "proc canRotateRight":
+  setup:
+    var game = newGame()
+  test "can rotate":
+    game.mino = Mino(x: 2, y: 0)
+    check game.canRotateRight()
+  test "cannot rotate":
+    # FIXME: 
+    # game.mino = Mino(x: 2, y: 0)
+    # game.mino.rotateRight()
+    # game.mino.x = 1
+    # check not game.canRotateRight()
