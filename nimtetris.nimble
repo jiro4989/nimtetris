@@ -2,7 +2,7 @@
 
 version       = "0.1.0"
 author        = "jiro4989"
-description   = "Terminal tetris"
+description   = "A simple terminal tetris in Nim"
 license       = "MIT"
 srcDir        = "src"
 bin           = @["nimtetris"]
