@@ -1,5 +1,5 @@
 import random
-import types
+import blocks
 
 type
   Mino* = object
