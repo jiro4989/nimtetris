@@ -217,3 +217,21 @@ suite "proc canRotateLeft":
     game.mino.rotateLeft()
     game.mino.x = 1
     check not game.canRotateLeft()
+
+suite "proc color":
+  test "EMPTY_MINO": check bgBlack == color(EMPTY_MINO)
+  test "FILLED_MINO1": check bgWhite == color(FILLED_MINO1)
+  test "FILLED_MINO2": check bgRed == color(FILLED_MINO2)
+  test "FILLED_MINO3": check bgGreen == color(FILLED_MINO3)
+  test "FILLED_MINO4": check bgYellow == color(FILLED_MINO4)
+  test "FILLED_MINO5": check bgBlue == color(FILLED_MINO5)
+  test "FILLED_MINO6": check bgMagenta == color(FILLED_MINO6)
+  test "FILLED_MINO7": check bgCyan == color(FILLED_MINO7)
+  test "FILLED_MINO8": check bgCyan == color(FILLED_MINO8)
+
+suite "proc stop / isStopped":
+  test "test":
+    var game = newGame()
+    check not game.isStopped
+    game.stop()
+    check game.isStopped
