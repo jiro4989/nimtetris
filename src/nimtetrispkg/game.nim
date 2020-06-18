@@ -109,7 +109,7 @@ proc moveDownToBottom*(game: Game) =
 proc canRotate*(game: Game, mino: Mino): bool =
   let
     x = mino.x + game.minoboard.offset
-    y = mino.y + game.minoboard.offset
+    y = mino.y
     blk = mino.getBlock
     blk2 = game.minoboard.board.fetchBlock(x, y)
   return not blk.isOverlap(blk2)
