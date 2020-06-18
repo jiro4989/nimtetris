@@ -22,7 +22,7 @@ task archive, "Create archived assets":
   mkDir dir
   cpDir "bin", dir/"bin"
   cpFile "LICENSE", dir/"LICENSE"
-  cpFile "README.adoc", dir/"README.adoc"
+  cpFile "README.rst", dir/"README.rst"
   withDir "dist":
     when buildOS == "windows":
       exec &"7z a {assets}.zip {assets}"
