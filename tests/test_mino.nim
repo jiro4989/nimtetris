@@ -60,3 +60,27 @@ suite "proc moveDown":
     m.moveDown
     check m.x == 0
     check m.y == 1
+
+suite "proc rotateRight":
+  test "from 0 to 1":
+    var m = Mino(minoIndex: 2)
+    m.rotateRight
+    check m.rotateIndex == 1
+    m.rotateRight
+    check m.rotateIndex == 2
+  test "from 3 to 0":
+    var m = Mino(minoIndex: 2, rotateIndex: 3)
+    m.rotateRight
+    check m.rotateIndex == 0
+
+suite "proc rotateLeft":
+  test "from 2 to 1":
+    var m = Mino(minoIndex: 2, rotateIndex: 2)
+    m.rotateLeft
+    check m.rotateIndex == 1
+  test "from 0 to 3":
+    var m = Mino(minoIndex: 2)
+    m.rotateLeft
+    check m.rotateIndex == 3
+    m.rotateLeft
+    check m.rotateIndex == 2
