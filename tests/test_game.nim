@@ -100,3 +100,16 @@ suite "proc canMoveRight":
   test "can not move":
     var m = Mino(x: 8, y: 0)
     check not m.canMoveRight(game.minoboard.board)
+
+suite "proc canMoveLeft":
+  setup:
+    var game = newGame()
+  test "can move":
+    var m = Mino(x: 8, y: 0)
+    check m.canMoveLeft(game.minoboard.board)
+  test "can move":
+    var m = Mino(x: 4, y: 0)
+    check m.canMoveLeft(game.minoboard.board)
+  test "can not move":
+    var m = Mino(x: 3, y: 0)
+    check m.canMoveLeft(game.minoboard.board)
