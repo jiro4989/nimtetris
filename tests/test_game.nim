@@ -162,15 +162,31 @@ suite "proc moveLeft":
 suite "proc moveDown":
   setup:
     var game = newGame()
-  test "can move":
+  test "moved":
     game.mino = Mino(x: 4, y: 0)
     game.moveDown()
     check 1 == game.mino.y
-  test "can move":
+  test "moved":
     game.mino = Mino(x: 4, y: 13)
     game.moveDown()
     check 14 == game.mino.y
-  test "can not move":
+  test "cannot moved":
     game.mino = Mino(x: 4, y: 14)
     game.moveDown()
     check 14 == game.mino.y
+
+suite "proc moveDownToBottom":
+  setup:
+    var game = newGame()
+  test "moved":
+    game.mino = Mino(x: 4, y: 0)
+    game.moveDownToBottom()
+    check 0 == game.mino.y
+    check FILLED_MINO2 == game.minoboard.board[16][4]
+    check FILLED_MINO2 == game.minoboard.board[16][5]
+  test "moved":
+    game.mino = Mino(x: 4, y: 1)
+    game.moveDownToBottom()
+    check 0 == game.mino.y
+    check FILLED_MINO2 == game.minoboard.board[16][4]
+    check FILLED_MINO2 == game.minoboard.board[16][5]
