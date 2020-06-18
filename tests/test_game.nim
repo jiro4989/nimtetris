@@ -88,3 +88,15 @@ suite "proc deleteFilledRows":
     ]
     check want == game.minoboard.board
 
+suite "proc canMoveRight":
+  setup:
+    var game = newGame()
+  test "can move":
+    var m = Mino(x: 3, y: 0)
+    check m.canMoveRight(game.minoboard.board)
+  test "can move":
+    var m = Mino(x: 7, y: 0)
+    check m.canMoveRight(game.minoboard.board)
+  test "can not move":
+    var m = Mino(x: 8, y: 0)
+    check not m.canMoveRight(game.minoboard.board)
