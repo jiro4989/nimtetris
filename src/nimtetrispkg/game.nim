@@ -53,10 +53,11 @@ proc isDeletable(row: seq[int]): bool =
       return false
   return true
 
-proc deleteRow(mb: var MinoBoard, y: int) =
+proc deleteRow(mb: var MinoBoard, y: int): bool =
   let row = mb.fetchRow(y)
   if not row.isDeletable:
     return
+
   let x = mb.offset
   for i in countdown(y, 1):
     let j = i - 1
@@ -64,10 +65,13 @@ proc deleteRow(mb: var MinoBoard, y: int) =
     mb.board.setRow(row2, x, i)
   let emptyRow = repeat(EMPTY_MINO, mb.board[0].len - mb.offset * 2)
   mb.board.setRow(emptyRow, x, 0)
+  return true
 
 proc deleteFilledRows*(game: Game) =
   for i in 0 ..< game.minoboard.board.len - game.minoboard.offset:
-    game.minoboard.deleteRow(i)
+    let deleted = game.minoboard.deleteRow(i)
+    if deleted:
+      game.score += 100
 
 proc canMoveRight(m: Mino, b: Board): bool = 
   if b[0].len < m.x + 1 + MINO_BLOCK_WIDTH:
@@ -201,3 +205,5 @@ proc stop*(game: Game) =
 proc isStopped*(game: Game): bool =
   game.isStopped
 
+proc score*(game: Game): int64 =
+  game.score
