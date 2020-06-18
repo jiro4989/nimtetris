@@ -7,8 +7,8 @@ on:
     types: [published]
 
 env:
-  APP_NAME: 'APPNAME'
-  NIM_VERSION: '1.2.0'
+  APP_NAME: 'nimtetris'
+  NIM_VERSION: '1.2.2'
 
 jobs:
   skip:
@@ -43,7 +43,7 @@ jobs:
         with:
           nim-version: ${{ env.NIM_VERSION }}
       - run: nimble build -Y
-      - run: nimble test -Y
+        #- run: nimble test -Y
       - name: Archive files
         run: nimble archive
       - name: Release
