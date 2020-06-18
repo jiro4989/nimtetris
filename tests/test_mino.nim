@@ -39,3 +39,24 @@ suite "proc getBlock":
         [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
       ]
     check want == got
+
+suite "proc moveRight":
+  test "test":
+    var m = Mino()
+    m.moveRight
+    check m.x == 1
+    check m.y == 0
+
+suite "proc moveLeft":
+  test "test":
+    var m = Mino()
+    m.moveLeft
+    check m.x == -1
+    check m.y == 0
+
+suite "proc moveDown":
+  test "test":
+    var m = Mino()
+    m.moveDown
+    check m.x == 0
+    check m.y == 1
