@@ -194,11 +194,26 @@ suite "proc moveDownToBottom":
 suite "proc canRotateRight":
   setup:
     var game = newGame()
-  test "can rotate":
+  test "can rotate: x = 2":
     game.mino = Mino(x: 2, y: 0)
     check game.canRotateRight()
-  test "cannot rotate":
+  test "can rotate: x = 8":
+    game.mino = Mino(x: 8, y: 0)
+    check game.canRotateRight()
+  test "cannot rotate: x = 1":
     game.mino = Mino(x: 2, y: 0)
     game.mino.rotateRight()
     game.mino.x = 1
     check not game.canRotateRight()
+
+suite "proc canRotateLeft":
+  setup:
+    var game = newGame()
+  test "can rotate":
+    game.mino = Mino(x: 2, y: 0)
+    check game.canRotateLeft()
+  test "cannot rotate":
+    game.mino = Mino(x: 2, y: 0)
+    game.mino.rotateLeft()
+    game.mino.x = 1
+    check not game.canRotateLeft()
