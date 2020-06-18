@@ -30,21 +30,12 @@ proc waitKeyInput(n: int) {.thread.} =
         gameobj.rotateRight()
       of Key.J:
         gameobj.moveDown()
-      of Key.K:
-        # 何もしない
-        discard
       of Key.H:
         gameobj.moveLeft()
       of Key.L:
         gameobj.moveRight()
-      of Key.Space:
+      of Key.Space, Key.Enter:
         gameobj.moveDownToBottom()
-      of Key.C:
-        discard
-      of Key.Enter:
-        discard
-      of Key.S:
-        discard
       else: discard
     release(L)
     sleep 10
