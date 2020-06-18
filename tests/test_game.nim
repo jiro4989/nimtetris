@@ -198,8 +198,7 @@ suite "proc canRotateRight":
     game.mino = Mino(x: 2, y: 0)
     check game.canRotateRight()
   test "cannot rotate":
-    # FIXME: 
-    # game.mino = Mino(x: 2, y: 0)
-    # game.mino.rotateRight()
-    # game.mino.x = 1
-    # check not game.canRotateRight()
+    game.mino = Mino(x: 2, y: 0)
+    game.mino.rotateRight()
+    game.mino.x = 1
+    check not game.canRotateRight()
