@@ -1,4 +1,5 @@
 import os, threadpool, locks
+from terminal import eraseScreen
 import illwill
 import nimtetrispkg/game
 
@@ -8,6 +9,7 @@ var
 
 proc exitProc() {.noconv.} =
   ## 終了処理
+  eraseScreen()
   illwillDeinit()
   showCursor()
 
