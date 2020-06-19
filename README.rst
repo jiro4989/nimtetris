@@ -62,4 +62,4 @@ MIT
 .. |nimble-install| image:: https://nimble.directory/ci/badges/nimtetris/nimdevel/status.svg
    :target: https://nimble.directory/ci/badges/nimtetris/nimdevel/output.html
 .. |demo-linux| image:: https://user-images.githubusercontent.com/13825004/85140962-01dce300-b281-11ea-9473-2d558c0881c0.gif
-.. |demo-win| image:: https://user-images.githubusercontent.com/13825004/85021667-1c458c80-b1ad-11ea-9609-46f30a4b7be7.gif
+.. |demo-win| image:: https://user-images.githubusercontent.com/13825004/85143527-cf34e980-b284-11ea-8997-5f5e3039ca32.gif
