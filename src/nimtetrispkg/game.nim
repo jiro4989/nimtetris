@@ -177,21 +177,7 @@ proc drawScore(game: Game, x, y, width: int) =
   game.tb.drawArea("SCORE", x, y, width, fgWhite, bgBlack)
   game.tb.drawArea($game.score, x, y+1, width, fgBlack, bgWhite)
 
-proc redraw*(game: Game) =
-  # 後から端末の幅が変わる場合があるため
-  # 端末の幅情報はループの都度取得
-  let tw = terminalWidth()
-  let th = terminalHeight()
-  game.tb = newTerminalBuffer(tw, th)
-
-  block:
-    let
-      x = 28
-      y = 5
-      w = 20
-    game.drawTimer(x, y, w)
-    game.drawScore(x, y+3, w)
-
+proc drawBoard(game: Game) =
   # 画面描画用のボードを生成
   var board = game.minoboard.board
   board.setMino(game.mino)
@@ -203,6 +189,21 @@ proc redraw*(game: Game) =
       game.tb.setBackgroundColor(c)
       game.tb.write(x*2, y+1, "  ")
       game.tb.resetAttributes()
+
+proc redraw*(game: Game) =
+  # 後から端末の幅が変わる場合があるため
+  # 端末の幅情報はループの都度取得
+  let tw = terminalWidth()
+  let th = terminalHeight()
+  game.tb = newTerminalBuffer(tw, th)
+
+  let
+    x = 28
+    y = 5
+    w = 20
+  game.drawTimer(x, y, w)
+  game.drawScore(x, y+3, w)
+  game.drawBoard()
   game.tb.display()
 
 proc stop*(game: Game) =
