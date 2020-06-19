@@ -1,7 +1,38 @@
 import os, threadpool, locks
 from terminal import eraseScreen
+from strformat import `&`
 import illwill
 import nimtetrispkg/game
+
+const
+  appName = "nimtetris"
+  usage = &"""{appName} is a simple terminal tetris in nim.
+
+usage:
+    {appName} [option]
+
+options:
+    -h, --help       print usage and quit.
+    -v, --version    print version and quit.
+"""
+
+  version = &"""{appName} command version 1.2.0
+Copyright (c) 2020 jiro4989
+Released under the MIT License.
+https://github.com/jiro4989/{appName}"""
+
+let args = commandLineParams()
+if 0 < args.len:
+  let opt = args[0]
+  case opt
+  of "-h", "--help":
+    echo usage
+  of "-v", "--version":
+    echo version
+  else:
+    stderr.writeLine(&"illegal arguments. see '{appName} -h'")
+    quit 1
+  quit 0
 
 var
   thr: array[2, Thread[int]]
