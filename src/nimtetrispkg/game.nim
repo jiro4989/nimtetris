@@ -29,8 +29,13 @@ proc newGame*(): Game =
     mino: newRandomMino(),
   )
 
+proc canMoveDown*(game: Game): bool
+proc stop*(game: Game)
+
 proc setRandomMino*(game: Game) =
   game.mino = newRandomMino()
+  if not game.canMoveDown():
+    game.stop()
 
 proc setMino*(b: var Board, m: Mino) =
   let blk = m.getBlock
