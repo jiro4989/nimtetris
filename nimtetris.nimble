@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.0.0"
+version       = "1.1.0"
 author        = "jiro4989"
 description   = "A simple terminal tetris in Nim"
 license       = "MIT"

@@ -14,9 +14,20 @@ type
     score: int64
     isStopped: bool
     mino: Mino
+    nextMino: Mino
   MinoBoard = object
     board: Board
     offset: int
+
+const
+  nextMinoArea: Board = @[
+    @[FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1],
+    @[FILLED_MINO1, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO1],
+    @[FILLED_MINO1, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO1],
+    @[FILLED_MINO1, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO1],
+    @[FILLED_MINO1, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO1],
+    @[FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1],
+  ]
 
 proc newMinoBoard(): MinoBoard =
   result = MinoBoard(board: initialBoard, offset: 2)
@@ -27,13 +38,15 @@ proc newGame*(): Game =
     startTime: now(),
     endTime: now(),
     mino: newRandomMino(),
+    nextMino: newRandomMino(),
   )
 
 proc canMoveDown*(game: Game): bool
 proc stop*(game: Game)
 
 proc setRandomMino*(game: Game) =
-  game.mino = newRandomMino()
+  game.mino = game.nextMino
+  game.nextMino = newRandomMino()
   if not game.canMoveDown():
     game.stop()
 
@@ -170,6 +183,24 @@ proc drawArea(tb: var TerminalBuffer, label: string, x, y, width: int, fgColor: 
   tb.write(x, y, labelText(label, width))
   tb.resetAttributes()
 
+proc drawBoard(game: Game, board: Board, x, y: int) =
+  for y2, row in board:
+    # 行を描画
+    for x2, cell in row:
+      let c = cell.color()
+      game.tb.setBackgroundColor(c)
+      game.tb.write(x+x2*2, y+y2, "  ")
+      game.tb.resetAttributes()
+
+proc drawNextMino(game: Game, x, y, width: int) =
+  # frame
+  var board = nextMinoArea
+  var mino = game.nextMino
+  mino.x = 1
+  mino.y = 1
+  board.setMino(mino)
+  game.drawBoard(board, x, 1)
+
 proc drawTimer(game: Game, x, y, width: int) =
   let
     dur = now() - game.startTime
@@ -209,14 +240,7 @@ proc drawBoard(game: Game) =
   # 画面描画用のボードを生成
   var board = game.minoboard.board
   board.setMino(game.mino)
-
-  for y, row in board:
-    # 行を描画
-    for x, cell in row:
-      let c = cell.color()
-      game.tb.setBackgroundColor(c)
-      game.tb.write(x*2, y+1, "  ")
-      game.tb.resetAttributes()
+  game.drawBoard(board, 2, 0)
 
 proc redraw*(game: Game) =
   # 後から端末の幅が変わる場合があるため
@@ -226,11 +250,12 @@ proc redraw*(game: Game) =
   game.tb = newTerminalBuffer(tw, th)
 
   let
-    x = 28
-    y = 5
+    x = 30
+    y = 0
     w = 20
-  game.drawTimer(x, y, w)
-  game.drawScore(x, y+3, w)
+  game.drawNextMino(x, y, w)
+  game.drawTimer(x, y+8, w)
+  game.drawScore(x, y+11, w)
   game.drawKeyBindings(2, 21, 60)
   game.drawBoard()
   game.tb.display()
