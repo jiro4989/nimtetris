@@ -7,7 +7,7 @@ var
   thr: array[2, Thread[int]]
   L: Lock
 
-var gameobj = newGame()
+var gameobj = Game()
 
 proc exitProc() {.noconv.} =
   ## 終了処理
@@ -17,6 +17,13 @@ proc exitProc() {.noconv.} =
   echo ""
   echo "GAMEOVER"
   echo "YOUR SCORE IS [ " & $gameobj.score & " ]."
+
+illwillInit(fullscreen=true)
+setControlCHook(exitProc)
+hideCursor()
+
+selectMode()
+gameobj = newGame()
 
 proc waitKeyInput(n: int) {.thread.} =
   while true:
@@ -63,15 +70,10 @@ proc startMinoDownClock(n: int) {.thread.} =
         gameobj.setRandomMino()
       gameobj.deleteFilledRows()
     release(L)
-    sleep 1000
+    sleep sleepTime
 
 proc main(): int =
-  illwillInit(fullscreen=true)
-  setControlCHook(exitProc)
-  hideCursor()
-
   initLock(L)
-
   createThread(thr[0], waitKeyInput, 0)
   createThread(thr[1], startMinoDownClock, 0)
   while not gameobj.isStopped:

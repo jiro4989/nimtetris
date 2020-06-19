@@ -7,6 +7,8 @@ type
     minoIndex: int
     x*: int
     y*: int
+  Mode* = enum
+    mEasy, mNormal, mHard
 
 const
   MINO_BLOCK_WIDTH* = 4
@@ -20,7 +22,17 @@ const
   FILLED_MINO7* = 64
   FILLED_MINO8* = 128
 
-  minos* = @[
+  easyMinos* = @[
+    @[
+      [
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, FILLED_MINO2, EMPTY_MINO, EMPTY_MINO],
+        [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
+      ],
+    ]
+  ]
+  normalMinos* = @[
     @[
       [
         [EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO],
@@ -162,7 +174,17 @@ const
     ],
   ]
 
+var
+  minos = normalMinos
+
 randomize()
+
+proc initMinos*(mode: Mode) =
+  minos =
+    case mode
+    of mEasy: easyMinos
+    of mNormal: normalMinos
+    of mHard: normalMinos
 
 proc newRandomMino*(): Mino =
   let r = rand(0 .. minos.high)
