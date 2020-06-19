@@ -155,7 +155,7 @@ proc color(n: int): BackgroundColor =
   else: bgBlack
 
 proc labelText(t: string, width: int): string =
-  let s = &" {t} "
+  let s = " " & t
   let rightPad = " ".repeat(width - s.len).join
   return &"{s}{rightPad}"
 
@@ -177,21 +177,31 @@ proc drawScore(game: Game, x, y, width: int) =
   game.tb.drawArea("SCORE", x, y, width, fgWhite, bgBlack)
   game.tb.drawArea($game.score, x, y+1, width, fgBlack, bgWhite)
 
-proc redraw*(game: Game) =
-  # 後から端末の幅が変わる場合があるため
-  # 端末の幅情報はループの都度取得
-  let tw = terminalWidth()
-  let th = terminalHeight()
-  game.tb = newTerminalBuffer(tw, th)
+proc drawKeyBindings(game: Game, x, y, width: int) =
+  let w = width div 6
+  var keys = @[
+    ("H", "<-"),
+    ("J", "DOWN"),
+    ("L", "->"),
+    ("<SPC>", "BOTTOM"),
+    ("U", "L-RORATE"),
+    ("O", "R-ROTATE"),
+  ]
+  for i, t in keys:
+    let x2 = x + i * w
+    game.tb.drawArea(t[0], x2, y, w, fgWhite, bgBlack)
+    game.tb.drawArea(t[1], x2, y+1, w, fgBlack, bgWhite)
 
-  block:
-    let
-      x = 28
-      y = 5
-      w = 20
-    game.drawTimer(x, y, w)
-    game.drawScore(x, y+3, w)
+  keys = @[
+    ("Q", "QUIT"),
+    ("<ESC>", "QUIT"),
+  ]
+  for i, t in keys:
+    let x2 = x + i * w
+    game.tb.drawArea(t[0], x2, y+3, w, fgWhite, bgBlack)
+    game.tb.drawArea(t[1], x2, y+4, w, fgBlack, bgWhite)
 
+proc drawBoard(game: Game) =
   # 画面描画用のボードを生成
   var board = game.minoboard.board
   board.setMino(game.mino)
@@ -203,6 +213,22 @@ proc redraw*(game: Game) =
       game.tb.setBackgroundColor(c)
       game.tb.write(x*2, y+1, "  ")
       game.tb.resetAttributes()
+
+proc redraw*(game: Game) =
+  # 後から端末の幅が変わる場合があるため
+  # 端末の幅情報はループの都度取得
+  let tw = terminalWidth()
+  let th = terminalHeight()
+  game.tb = newTerminalBuffer(tw, th)
+
+  let
+    x = 28
+    y = 5
+    w = 20
+  game.drawTimer(x, y, w)
+  game.drawScore(x, y+3, w)
+  game.drawKeyBindings(2, 21, 60)
+  game.drawBoard()
   game.tb.display()
 
 proc stop*(game: Game) =
