@@ -54,7 +54,7 @@ suite "proc deleteRow":
       @[FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1,],
     ]
     var mb = MinoBoard(board: board, offset: 2)
-    mb.deleteRow(1)
+    check mb.deleteRow(1)
 
     let want = @[
       @[FILLED_MINO1, FILLED_MINO1, EMPTY_MINO, EMPTY_MINO, EMPTY_MINO, FILLED_MINO1, FILLED_MINO1,],
@@ -87,6 +87,7 @@ suite "proc deleteFilledRows":
       @[FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1,],
     ]
     check want == game.minoboard.board
+    check 200 == game.score
 
 suite "proc canMoveRight":
   setup:
@@ -235,3 +236,9 @@ suite "proc stop / isStopped":
     check not game.isStopped
     game.stop()
     check game.isStopped
+
+suite "proc labelText":
+  test "TIME":
+    check " TIME     " == labelText("TIME", 10)
+  test "sec":
+    check " 20 sec   " == labelText("20 sec", 10)
