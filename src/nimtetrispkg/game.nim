@@ -180,12 +180,12 @@ proc drawScore(game: Game, x, y, width: int) =
 proc drawKeyBindings(game: Game, x, y, width: int) =
   let w = width div 6
   var keys = @[
-    ("H", "<-"),
-    ("J", "DOWN"),
-    ("L", "->"),
+    ("H / A", "<-"),
+    ("J / S", "DOWN"),
+    ("L / D", "->"),
     ("<SPC>", "BOTTOM"),
-    ("U", "L-RORATE"),
-    ("O", "R-ROTATE"),
+    ("U / Q", "L-RORATE"),
+    ("O / E", "R-ROTATE"),
   ]
   for i, t in keys:
     let x2 = x + i * w
@@ -193,7 +193,6 @@ proc drawKeyBindings(game: Game, x, y, width: int) =
     game.tb.drawArea(t[1], x2, y+1, w, fgBlack, bgWhite)
 
   keys = @[
-    ("Q", "QUIT"),
     ("<ESC>", "QUIT"),
   ]
   for i, t in keys:

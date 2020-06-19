@@ -31,11 +31,11 @@ Vim like key-bindings.
 =============== ===================
 Key             Motion
 =============== ===================
-H               Move left
-J               Move down
-L               Move right
-U               Rotate left
-O               Rotate right
+H / A           Move left
+J / S           Move down
+L / D           Move right
+U / Q           Rotate left
+O / E           Rotate right
 <Space>/<Enter> Move down to bottom
 =============== ===================
 
