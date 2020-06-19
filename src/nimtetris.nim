@@ -7,18 +7,25 @@ var
   thr: array[2, Thread[int]]
   L: Lock
 
+var gameobj = newGame()
+
 proc exitProc() {.noconv.} =
   ## 終了処理
-  eraseScreen()
   illwillDeinit()
   showCursor()
-
-var gameobj = newGame()
+  eraseScreen()
+  echo ""
+  echo "GAMEOVER"
+  echo "YOUR SCORE IS [ " & $gameobj.score & " ]."
 
 proc waitKeyInput(n: int) {.thread.} =
   while true:
     acquire(L)
     {.gcsafe.}:
+      if gameobj.isStopped:
+        release(L)
+        break
+
       var key = getKey()
       case key
       of Key.None: discard
