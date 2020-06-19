@@ -22,19 +22,19 @@ proc waitKeyInput(n: int) {.thread.} =
       var key = getKey()
       case key
       of Key.None: discard
-      of Key.Escape, Key.Q:
+      of Key.Escape:
         gameobj.stop()
         release(L)
         break
-      of Key.U:
+      of Key.U, Key.Q:
         gameobj.rotateLeft()
-      of Key.O:
+      of Key.O, Key.E:
         gameobj.rotateRight()
-      of Key.J:
+      of Key.J, Key.S:
         gameobj.moveDown()
-      of Key.H:
+      of Key.H, Key.A:
         gameobj.moveLeft()
-      of Key.L:
+      of Key.L, Key.D:
         gameobj.moveRight()
       of Key.Space, Key.Enter:
         gameobj.moveDownToBottom()
