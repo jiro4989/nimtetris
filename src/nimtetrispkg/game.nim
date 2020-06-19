@@ -29,6 +29,9 @@ const
     @[FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1, FILLED_MINO1],
   ]
 
+var
+  sleepTime* = 1000
+
 proc newMinoBoard(): MinoBoard =
   result = MinoBoard(board: initialBoard, offset: 2)
 
@@ -268,3 +271,57 @@ proc isStopped*(game: Game): bool =
 
 proc score*(game: Game): int64 =
   game.score
+
+proc drawSelectScreen(tb: var TerminalBuffer, selectedIndex: int) =
+  const texts = ["EASY MODE", "NORMAL MODE", "HARD MODE"]
+  tb.write(2, 2, "== SELECT MODE ==")
+  tb.write(2, 3, "W : UP | S : DOWN | <SPC> : SELECT")
+  for i, text in texts:
+    var text =
+      if i == selectedIndex:
+        "> " & text
+      else:
+        "  " & text
+    tb.write(2, 2*i + 5, text)
+  tb.display()
+
+proc selectMode*() = 
+  let tw = terminalWidth()
+  let th = terminalHeight()
+  var tb = newTerminalBuffer(tw, th)
+  var selectedIndex = 1
+  tb.drawSelectScreen(selectedIndex)
+
+  while true:
+    var key = getKey()
+    case key
+    of Key.None: discard
+    of Key.Escape:
+      illwillDeinit()
+      showCursor()
+      quit 0
+    of Key.Enter, Key.Space:
+      break
+    of Key.W, Key.K:
+      dec(selectedIndex)
+      if selectedIndex < 0:
+        selectedIndex = 2
+      tb.drawSelectScreen(selectedIndex)
+    of Key.J, Key.S:
+      inc(selectedIndex)
+      if 2 < selectedIndex:
+        selectedIndex = 0
+      tb.drawSelectScreen(selectedIndex)
+    else: discard
+
+  let m =
+    case selectedIndex
+    of 0: mEasy
+    of 1: mNormal
+    of 2:
+      sleepTime = 50
+      mHard
+    else: mNormal
+  initMinos(m)
+
+  tb.display()
